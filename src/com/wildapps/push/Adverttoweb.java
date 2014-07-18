@@ -11,10 +11,18 @@ public class Adverttoweb extends Activity{
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.advertview);
+		//Will have the adverts displayed here.
+		
+		
+		
 		Intent i = new Intent(Intent.ACTION_VIEW);
 		Bundle extras = getIntent().getExtras();
 		String url = extras.getString("url");
 		i.setData(Uri.parse(url));
+		if(url.isEmpty() == false)
+		{	
 		startActivity(i);
+		}
+		
 	}
 }
