@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Push</string>
+    <string name="title_section1">My Topics</string>
+    <string name="title_section2">Search</string>
+    <string name="action_settings">Settings</string>
+    <string name="fb_app_id">258123151058189</string>
+    <string name="fb_role_arn">arn:aws:iam::072893446206:role/Facebooklogin</string>
+
+</resources>

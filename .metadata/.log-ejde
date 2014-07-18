@@ -1,0 +1,26 @@
+21:59:10,194 TRACE [R] ContextManager starting, bundle version: 1.5.2.201204302029
+21:59:10,713 DEBUG [C] Property change listener is enabled.
+21:59:11,362 TRACE [C] LC_filtering_set was changed from "false" to "true"
+21:59:11,383 DEBUG [U] Starting Search for CPs
+21:59:11,449 DEBUG [U] CP named BlackBerry Java SDK version 5.0.0 was found at /Users/Robert/Downloads/eclipse/plugins/net.rim.ejde.componentpack5.0.0_5.0.0.36/components
+21:59:11,494 DEBUG [U] CP named BlackBerry Java SDK version 6.0.0 was found at /Users/Robert/Downloads/eclipse/plugins/net.rim.ejde.componentpack6.0.0_6.0.0.43/components
+21:59:11,533 DEBUG [U] CP named BlackBerry Java SDK version 7.0.0 was found at /Users/Robert/Downloads/eclipse/plugins/net.rim.ejde.componentpack7.0.0_7.0.0.33/components
+21:59:11,577 DEBUG [U] CP named BlackBerry Java SDK version 7.1.0 was found at /Users/Robert/Downloads/eclipse/plugins/net.rim.ejde.componentpack7.1.0_7.1.0.10/components
+21:59:14,665 DEBUG [K] Event [org.eclipse.jdt.launching.PROPERTY_JAVADOC_LOCATION] for: *OLD* was[http://download.oracle.com/javase/6/docs/api/] *NEW* is [].
+21:59:14,687 DEBUG [K] VM: *SWITCH* from [NULL] to [com.oracle.java.8u.jdk$Java SE 8 [1.8.0]]
+21:59:14,705 DEBUG [K] VM: *ADDED* [com.oracle.java.8u.jdk$/Library/Java/JavaVirtualMachines/jdk1.8.0.jdk/Contents/Home]
+21:59:14,705 DEBUG [K] VM: *ADDED* [com.apple.javajdk16$/System/Library/Java/JavaVirtualMachines/1.6.0.jdk/Contents/Home]
+21:59:14,713 TRACE [W] Attempting to create VM with name - BlackBerry JRE 7.1.0
+21:59:14,760 DEBUG [K] VM: *ADDED* [BlackBerry JRE 7.1.0$/Users/Robert/Downloads/eclipse/plugins/net.rim.ejde.componentpack7.1.0_7.1.0.10/components]
+21:59:14,851 TRACE [C] openStartupOnEclpseFirstStart was changed from "false" to "false"
+21:59:14,886 TRACE [W] Attempting to create VM with name - BlackBerry JRE 7.0.0
+21:59:14,911 DEBUG [K] VM: *ADDED* [BlackBerry JRE 7.0.0$/Users/Robert/Downloads/eclipse/plugins/net.rim.ejde.componentpack7.0.0_7.0.0.33/components]
+21:59:14,919 TRACE [W] Attempting to create VM with name - BlackBerry JRE 6.0.0
+21:59:14,952 DEBUG [K] VM: *ADDED* [BlackBerry JRE 6.0.0$/Users/Robert/Downloads/eclipse/plugins/net.rim.ejde.componentpack6.0.0_6.0.0.43/components]
+21:59:14,967 TRACE [W] Attempting to create VM with name - BlackBerry JRE 5.0.0
+21:59:14,999 DEBUG [K] VM: *ADDED* [BlackBerry JRE 5.0.0$/Users/Robert/Downloads/eclipse/plugins/net.rim.ejde.componentpack5.0.0_5.0.0.36/components]
+21:59:15,013 DEBUG [I] Bundle [net.rim.ejde] is changing state to Started.
+21:59:15,028 TRACE [R] ContextManager startingneed update: true
+21:59:15,476 DEBUG [C] qualifier: 201204302029
+22:00:05,236 DEBUG [I] Bundle [net.rim.ejde] is changing state to Stopping.
+22:00:05,238 DEBUG [C] Property change listener is disabled.
