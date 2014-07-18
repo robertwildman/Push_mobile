@@ -1,12 +1,15 @@
 package com.wildapps.push;
 
+import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
 
 import android.app.Activity;
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 
 public class Adverttoweb extends Activity{
 	 private InterstitialAd interstitial;
@@ -24,22 +27,60 @@ public class Adverttoweb extends Activity{
 
 	    // Begin loading your interstitial.
 	    interstitial.loadAd(adRequest);
-		
+	    interstitial.setAdListener(new AdListener(){
+	          public void onAdLoaded(){
+	               displayInterstitial();
+	          }
+	    
+	});
 		
 		
 		
 	}
+	protected void onResume(Bundle savedInstanceState)
+	{
+		 
+	    
+	}
 	public void displayInterstitial() {
 	    if (interstitial.isLoaded()) {
 	      interstitial.show();
-	      Intent i = new Intent(Intent.ACTION_VIEW);
-			Bundle extras = getIntent().getExtras();
-			String url = extras.getString("url");
-			i.setData(Uri.parse(url));
-			if(url.isEmpty() == false)
-			{	
-			startActivity(i);
-			}
+	      Runnable r = new Runnable() {
+	    	    @Override
+	    	    public void run(){
+	    	    	try{
+	  	    		  
+	  	    	      Bundle extras = getIntent().getExtras();
+	  	    			String url = extras.getString("url");
+	  	    	      Intent intent = new Intent(Intent.ACTION_VIEW, 
+	  	    				     Uri.parse(url));
+	  	    				startActivity(intent);
+	  	    	      }
+	  	    	      catch(Exception e)
+	  	    	      {
+	  	    	    	  try
+	  	    	    	  {
+	  	    	    	  Bundle extras = getIntent().getExtras();
+	  	    				String url = "http://"+extras.getString("url");
+	  	    		      Intent intent = new Intent(Intent.ACTION_VIEW, 
+	  	    					     Uri.parse(url));
+	  	    					startActivity(intent);
+	  	    	    	  }
+	  	    	    	  catch(Exception e1)
+	  	    	    	  {
+	  	    	    	 e1.printStackTrace(); 
+	  	    	    	  }
+	  	    	    	 }
+	    	    }
+	    	};
+
+	    	Handler h = new Handler();
+	    	h.postDelayed(r, 10000);
+	      
+	      
+	    	  
+	      
+	    
 	    }
 	    
 	  }

@@ -39,8 +39,9 @@ public class GcmMessageHandler extends IntentService {
        mes = extras.getString("default");
        showToast();
        Intent i = new Intent(this,Adverttoweb.class);
+       Log.d("gre", extras.getString("url"));
        i.putExtra("url",extras.getString("url"));
-       PendingIntent pend = PendingIntent.getActivity(getApplicationContext(), 0, i, 0);
+       PendingIntent pend = PendingIntent.getActivity(getApplicationContext(), 0, i, PendingIntent.FLAG_CANCEL_CURRENT);
        NotificationManager notificationManager = (NotificationManager) 
     		   getSystemService(NOTIFICATION_SERVICE); 
        Notification n  = new Notification.Builder(this)
