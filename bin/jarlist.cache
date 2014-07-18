@@ -2,7 +2,6 @@
 # format is <lastModified> <length> <SHA-1> <path>
 # Encoding is UTF-8
 1388684573000 627582 db0f122c99ef9f90dbab3fada6d191f2880cbb8e /Users/Robert/Documents/appcompat_v7_3/libs/android-support-v4.jar
-1404582246000 627582 db0f122c99ef9f90dbab3fada6d191f2880cbb8e /Users/Robert/Downloads/facebook-android-sdk-3.8.0/facebook/libs/android-support-v4.jar
 1404582246000 627582 db0f122c99ef9f90dbab3fada6d191f2880cbb8e /Users/Robert/Documents/Push_mobile/libs/android-support-v4.jar
 1388684819000 959413 cebe8e4a3a469c4623addcca1dc571407ff3a08e /Users/Robert/Documents/Push_mobile/libs/google-play-services.jar
 1388684819000 959413 cebe8e4a3a469c4623addcca1dc571407ff3a08e /Users/Robert/Downloads/adt-bundle-mac-x86_64-20130729/sdk/extras/google/google_play_services/libproject/google-play-services_lib/libs/google-play-services.jar
