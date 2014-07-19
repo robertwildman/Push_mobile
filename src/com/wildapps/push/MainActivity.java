@@ -15,8 +15,11 @@ import android.os.Bundle;
 import android.os.StrictMode;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.View;
 import android.view.inputmethod.EditorInfo;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.CheckedTextView;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -66,13 +69,60 @@ public class MainActivity extends Activity {
 		// Setting up the layout
 		ListView list = (ListView) findViewById(R.id.lvtopics);
 		ArrayList<String> topics = getStringArrayPref("Topics");
-		if (topics.size() < 1) {
+		
+		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
+				android.R.layout.simple_list_item_checked, topics);
+		list.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
+		
+        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                //Meaning user will be unsubscribing
+            	ArrayList<String> topics = getStringArrayPref("Topics");
+            	ArrayList<String> topicArn = getStringArrayPref("Topicsarn");
+            	Log.d("Push", topicArn.get(position));
+            	sns.unsubscribe(topicArn.get(position));
+            	Toast.makeText(getApplicationContext(), "You have unsubcribed to " + topics.get(position), Toast.LENGTH_LONG).show();
+            	topics.remove(position);
+            	topicArn.remove(position);
+    			setStringArrayPref("Topics", topics);
+    			setStringArrayPref("Topicsarn", topicArn);
+            	ListView list = (ListView) findViewById(R.id.lvtopics);
+				ArrayAdapter<String> adapter = new ArrayAdapter<String>(
+						getBaseContext(),
+						android.R.layout.simple_list_item_checked,
+						getStringArrayPref("Topics"));
+				list.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
+				list.setAdapter(adapter);
+				int i;
+				for(i = 0; i < list.getCount();i++)
+				{
+					list.setItemChecked(i, true);
+				}
+
+                
+            }
+
+			
+        });
+        if (topics.size() < 1) {
 			topics = new ArrayList<String>(1);
 			topics.add("Please Subscribe to a topic");
-		}
-		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
-				android.R.layout.simple_list_item_1, topics);
+			ArrayAdapter<String> adapter1 = new ArrayAdapter<String>(this,
+					android.R.layout.simple_list_item_1, topics);
+			list.setAdapter(adapter1);
+		}else
+		{
 		list.setAdapter(adapter);
+		
+		int i;
+		for(i = 0; i < list.getCount();i++)
+		{
+			list.setItemChecked(i, true);
+		}
+		
+		}
+		
 
 		// Setting up the EditText
 		etsearch = (EditText) findViewById(R.id.etsearch);
@@ -86,9 +136,15 @@ public class MainActivity extends Activity {
 					ListView list = (ListView) findViewById(R.id.lvtopics);
 					ArrayAdapter<String> adapter = new ArrayAdapter<String>(
 							getBaseContext(),
-							android.R.layout.simple_list_item_1,
+							android.R.layout.simple_list_item_checked,
 							getStringArrayPref("Topics"));
+					list.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
 					list.setAdapter(adapter);
+					int i;
+					for(i = 0; i < list.getCount();i++)
+					{
+						list.setItemChecked(i, true);
+					}
 					etsearch.setText("");
 					return true;
 				}
@@ -196,13 +252,17 @@ public class MainActivity extends Activity {
 			SubscribeRequest subscribeRequest = new SubscribeRequest(
 					Topicfullname, "application", Endpoint);
 			subscribeResult = sns.subscribe(subscribeRequest);
-
+			ArrayList<String> topicArn = getStringArrayPref("Topicsarn");
+			Log.d("Push", subscribeResult.getSubscriptionArn());
+			topicArn.add(subscribeResult.getSubscriptionArn());
 			Toast.makeText(c.getApplicationContext(),
 					"You have been subscribe to: " + Topicname,
 					Toast.LENGTH_LONG).show();
 			ArrayList<String> topics = getStringArrayPref("Topics");
 			topics.add(Topicname);
+			
 			setStringArrayPref("Topics", topics);
+			setStringArrayPref("Topicsarn", topicArn);
 
 		} catch (Exception e) {
 

@@ -4,6 +4,7 @@ import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
@@ -19,6 +20,10 @@ public class Adverttoweb extends Activity{
 		setContentView(R.layout.advertview);
 		//Will have the adverts displayed here.
 		  // Create the interstitial.
+		final ActionBar actionBar = getActionBar();
+		actionBar.setDisplayShowTitleEnabled(false);
+		actionBar.setIcon(getResources().getDrawable(R.drawable.pushbanner));
+		
 	    interstitial = new InterstitialAd(this);
 	    interstitial.setAdUnitId("ca-app-pub-2049126681125303/9962405275");
 

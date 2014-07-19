@@ -13,7 +13,8 @@
         android:autoText="true"
         android:editable="true"
         android:ems="10"
-        android:imeOptions="actionSearch" 
+        android:hint="Enter topic to subscribe"
+        android:imeOptions="actionSearch"
         android:singleLine="true" >
 
         <requestFocus />
