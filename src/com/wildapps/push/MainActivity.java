@@ -19,7 +19,6 @@ import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.CheckedTextView;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -50,8 +49,8 @@ public class MainActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.mytopics);
 		sns = new AmazonSNSClient(new BasicAWSCredentials(
-				"AKIAIXUMSA4N2UB2NEMQ",
-				"n3E9tHNCIzY38LxzDpJwDsQhev64PFZikErID4ON"));
+				"AKIAIB6HMHNDL5JNGATQ",
+				"UEsQLbVTVjJTWxif/4Garpi7usnMnxeFWvUiNS6u"));
 		sharedPreferences = this.getSharedPreferences("com.wildapps.push",
 				Context.MODE_PRIVATE);
 		StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()

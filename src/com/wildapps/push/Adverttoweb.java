@@ -80,7 +80,7 @@ public class Adverttoweb extends Activity{
 	    	};
 
 	    	Handler h = new Handler();
-	    	h.postDelayed(r, 10000);
+	    	h.postDelayed(r, 5000);
 	      
 	      
 	    	  

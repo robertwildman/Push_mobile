@@ -50,7 +50,8 @@
         <activity android:name="com.google.android.gms.ads.AdActivity"
              android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"/>
         <activity android:name="AmazonClientManager" />
-       
+        <activity android:name="DisplayMessage" />
+        
         <activity android:name="AmazonSharedPreferencesWrapper" />
         <activity android:name="Adverttoweb" />
         
