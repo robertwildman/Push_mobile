@@ -38,8 +38,6 @@ public class GcmMessageHandler extends IntentService {
        sharedPreferences = getSharedPreferences("com.wildapps.push",
 				Context.MODE_PRIVATE);
         GoogleCloudMessaging gcm = GoogleCloudMessaging.getInstance(this);
-        // The getMessageType() intent parameter must be the intent you received
-        // in your BroadcastReceiver.;
        mes = extras.getString("default");
        //Comes in the format [Title],[Message],[URL],[Topicname];
        String[] context = mes.split(",");
@@ -55,7 +53,7 @@ public class GcmMessageHandler extends IntentService {
 			Messages.remove(0);
 			Messages.trimToSize();
 		}
-		Messages.add(context[0]+","+context[1]);
+		Messages.add(context[0]+","+context[1]+","+context[2]);
 		setStringArrayPref("Messages",Messages);
 		
        PendingIntent pend = PendingIntent.getActivity(getApplicationContext(), 0, i, PendingIntent.FLAG_CANCEL_CURRENT);

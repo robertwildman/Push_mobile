@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import org.json.JSONArray;
 import org.json.JSONException;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -29,6 +30,10 @@ public class DisplayMessage extends Activity{
 		//Making Shared Prefs
 		sharedPreferences = this.getSharedPreferences("com.wildapps.push",
 				Context.MODE_PRIVATE);
+		//Action bar 
+		final ActionBar actionBar = getActionBar();
+		actionBar.setDisplayShowTitleEnabled(false);
+		actionBar.setIcon(getResources().getDrawable(R.drawable.pushbanner));
 		//This class will be dealing with the displaying to the user. 
 		//I will get get the Message Title , Body and URL from intents
 		//It will then display it to the class

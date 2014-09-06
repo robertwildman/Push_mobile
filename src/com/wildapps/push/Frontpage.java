@@ -17,11 +17,17 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class Frontpage extends Activity{
 	public static SharedPreferences sharedPreferences;
@@ -64,8 +70,14 @@ public class Frontpage extends Activity{
 		addtolistview(TempMessages);
 		
 	}
-	
-	public void addtolistview(ArrayList<String> a)
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+	    // Inflate the menu items for use in the action bar
+	    MenuInflater inflater = getMenuInflater();
+	    inflater.inflate(R.menu.main, menu);
+	    return super.onCreateOptionsMenu(menu);
+	}
+	public void addtolistview(final ArrayList<String> a)
 	{
 		List<Map<String,String>> data = new ArrayList<Map<String,String>>();
 		
@@ -86,9 +98,28 @@ public class Frontpage extends Activity{
 		Log.e("Push", data.toString());
 		Log.e("Push", names.toString());
 		Collections.reverse(data);
-		SimpleAdapter adapter = new SimpleAdapter(Frontpage.this,data,android.R.layout.two_line_list_item,names,new int[] {android.R.id.text1,android.R.id.text2});
+		final SimpleAdapter adapter = new SimpleAdapter(Frontpage.this,data,android.R.layout.two_line_list_item,names,new int[] {android.R.id.text1,android.R.id.text2});
 		lvMessages = (ListView)findViewById(R.id.lvMessages);
 		lvMessages.setAdapter(adapter);
+		lvMessages.setOnItemClickListener(new OnItemClickListener(){
+
+				@Override
+				public void onItemClick(AdapterView<?> parent, View view,
+						int position, long id) {
+					Collections.reverse(a);
+					String arraytemp = a.get(position);
+					String[] array = arraytemp.split(",");
+					Intent i = new Intent(Frontpage.this,DisplayMessage.class);
+				       i.putExtra("Title",array[0]);
+				       i.putExtra("Message",array[1]);
+				       i.putExtra("URL",array[2]);
+				       startActivity(i);
+					
+					
+				}
+
+
+});
 		lvMessages.refreshDrawableState();
 	}
 	public static void setStringArrayPref(String key, ArrayList<String> values) {
@@ -121,5 +152,28 @@ public class Frontpage extends Activity{
 			}
 		}
 		return urls;
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+
+		// handle item selection
+
+		switch (item.getItemId()) {
+
+		case R.id.action_add:
+			return true;
+		default:
+
+			return super.onOptionsItemSelected(item);
+
+		}
+
+	}
+
+	public void toast(String msg) {
+		// A basic setup for a toast making it easy to display them in code
+		Toast.makeText(getBaseContext(), msg, Toast.LENGTH_LONG)
+				.show();
 	}
 }
