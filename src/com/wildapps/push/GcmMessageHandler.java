@@ -19,6 +19,9 @@ import android.os.Handler;
 
 public class GcmMessageHandler extends IntentService {
 
+	//This class deals with the Handling of messages coming from the SNS servers.
+	//They will come in the format [Message Title],[Message Body],[Message URL],[Topic Name]
+	//It will come into the class as a string and be broken down and then will start a noficaion and also add it to the list of message 
      String mes;
      private Handler handler;
      public static SharedPreferences sharedPreferences;
@@ -41,21 +44,24 @@ public class GcmMessageHandler extends IntentService {
        mes = extras.getString("default");
        //Comes in the format [Title],[Message],[URL],[Topicname];
        String[] context = mes.split(",");
-       //This will display the message and send off to the class the Title Message and URL
-       Intent i = new Intent(this,DisplayMessage.class);
-       i.putExtra("Title",context[0]);
-       i.putExtra("Message",context[1]);
-       i.putExtra("URL",context[2]);
+      
        //Will save it so it can show up on the frontpage. 
 		ArrayList<String> Messages = getStringArrayPref("Messages");
+		//Checks to see if the ammount of message we have is less then 40 if over it will remove the oldest one and replace it with the newest one. 
 		if (Messages.size() > 40)
 		{
 			Messages.remove(0);
 			Messages.trimToSize();
 		}
-		Messages.add(context[0]+","+context[1]+","+context[2]);
+		Messages.add(context[0]+","+context[1]+","+context[2]+","+context[3]);
 		setStringArrayPref("Messages",Messages);
-		
+		//This sets up the Notification if the Topic Name as the Title and then Message Title and the sub message
+		// and when click on it will go to the message class with an intent also sending the Title Message and URL.  
+		 //This will display the message and send off to the class the Title Message and URL
+	       Intent i = new Intent(this,DisplayMessage.class);
+	       i.putExtra("Title",context[0]);
+	       i.putExtra("Message",context[1]);
+	       i.putExtra("URL",context[2]);
        PendingIntent pend = PendingIntent.getActivity(getApplicationContext(), 0, i, PendingIntent.FLAG_CANCEL_CURRENT);
        NotificationManager notificationManager = (NotificationManager) 
     		   getSystemService(NOTIFICATION_SERVICE); 

@@ -1,5 +1,9 @@
 package com.wildapps.push;
 
+import it.gmariotti.cardslib.library.internal.Card;
+import it.gmariotti.cardslib.library.internal.CardHeader;
+import it.gmariotti.cardslib.library.view.CardView;
+
 import java.util.ArrayList;
 
 import org.json.JSONArray;
@@ -52,21 +56,23 @@ public class DisplayMessage extends Activity{
 		//Also making sure that nothing is empty
 		if(Title.length() > 0 && Message.length() > 0 && URL.length() > 0)
 		{
-			TvTitle.setText(Title);
-			TvMessage.setText(Message);
-			BURL.setOnClickListener(new View.OnClickListener() {
-				
-				@Override
-				public void onClick(View v) {
-					//Will send the url to the Advert to Web Class
-					Intent i = new Intent(DisplayMessage.this,Adverttoweb.class);
-				    i.putExtra("url",URL);
-				    startActivity(i);
-					
-				}
-			});
-			
+			 //Dealing with the card library 
+			 //Create a Card
+		      Card card = new Card(this);
+
+		      //Create a CardHeader
+		      CardHeader header = new CardHeader(this);
+		      
+		      //Add Header to card
+		      card.addCardHeader(header);
+		      header.setTitle(Title);
+		      card.setTitle(Message);
+		      //Set card in the cardView
+		      CardView cardView = (CardView)findViewById(R.id.carddemo);
+		      cardView.setCard(card);
 		}
+		
+	
 		
 	}
 	

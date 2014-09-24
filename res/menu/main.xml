@@ -2,7 +2,13 @@
 
     <item android:id="@+id/action_add"
           android:icon="@drawable/add"
-          android:title="Add New Network"
+          android:title="Add New Topic"
+          android:showAsAction="never"  />
+    <item android:id="@+id/action_view"
+          android:title="View Topic"
+          android:showAsAction="never"  />
+    <item android:id="@+id/action_about"
+          android:title="About us"
           android:showAsAction="never"  />
     
 

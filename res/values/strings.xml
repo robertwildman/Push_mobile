@@ -7,5 +7,6 @@
     <string name="action_settings">Settings</string>
     <string name="fb_app_id">258123151058189</string>
     <string name="fb_role_arn">arn:aws:iam::072893446206:role/Facebooklogin</string>
+    <string name="card_title">Card title</string>
 
 </resources>
