@@ -48,10 +48,6 @@ public class DisplayMessage extends Activity{
 			Message = extras.getString("Message");
 			URL = extras.getString("URL");
 		}
-		//Finds the objects on the screen
-		TvTitle = (TextView)findViewById(R.id.tvmessagetitle);
-		TvMessage = (TextView)findViewById(R.id.tvmessagebody);
-		BURL = (Button)findViewById(R.id.bwebsite);
 		//Will now set the message up and display
 		//Also making sure that nothing is empty
 		if(Title.length() > 0 && Message.length() > 0 && URL.length() > 0)

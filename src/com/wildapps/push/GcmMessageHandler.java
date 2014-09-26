@@ -66,7 +66,7 @@ public class GcmMessageHandler extends IntentService {
        NotificationManager notificationManager = (NotificationManager) 
     		   getSystemService(NOTIFICATION_SERVICE); 
        Notification n  = new Notification.Builder(this)
-       .setSmallIcon(R.drawable.ic_launcher)
+       .setSmallIcon(R.drawable.ic_stat_name)
 	   .setContentTitle(context[3])
 	   .setContentText(context[0])
 	   .setContentIntent(pend)
