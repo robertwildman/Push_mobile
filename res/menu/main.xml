@@ -10,6 +10,12 @@
     <item android:id="@+id/action_about"
           android:title="About us"
           android:showAsAction="never"  />
+    <item android:id="@+id/action_remove"
+        android:title="Remove All Message"
+        android:showAsAction="never" />
+    <item android:id="@+id/action_refresh"
+        android:title="Refresh Messages"
+        android:showAsAction="never" />
     
 
 </menu>

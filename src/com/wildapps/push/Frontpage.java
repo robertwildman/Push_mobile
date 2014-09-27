@@ -30,6 +30,7 @@ import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.AlertDialog.Builder;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -39,12 +40,14 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -61,6 +64,7 @@ public class Frontpage extends Activity{
 	public int cardid,stTopicend;
 	public String[] Temp1;
 	public Intent i;
+	public CardListView listView;
 	public Boolean stRetry;
 	public SubscribeResult subscribeResult;
 	public AmazonSNS sns;
@@ -69,7 +73,7 @@ public class Frontpage extends Activity{
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		//Set up sns 
+		//Setting up aws.
 		sns = new AmazonSNSClient(new BasicAWSCredentials(
 				"AKIAIB6HMHNDL5JNGATQ",
 				"UEsQLbVTVjJTWxif/4Garpi7usnMnxeFWvUiNS6u"));
@@ -88,6 +92,7 @@ public class Frontpage extends Activity{
 		// up the getregid function
 		if (sharedPreferences.getBoolean("Registered", false) == false) {
 			getRegId();
+			startup();
 		}
 		//Frontpage of the app This will show the recent pushes to the Phone 
 		//If there as been none it will show a Welcome Message and also one telling them how they can sign up.
@@ -133,50 +138,62 @@ public class Frontpage extends Activity{
 			if(Temp1.length > 3)
 			{
 				header.setTitle(Temp1[0]+" - "+Temp1[3]);
+				//Add a popup menu. This method set OverFlow button to visibile
+				header.setPopupMenu(R.menu.message, new OnClickCardHeaderPopupMenuListener(){
+					int cardpos = cardid;
+					@Override
+					public void onMenuItemClick(BaseCard card, MenuItem item) {
+						if(item.getTitle().toString().equalsIgnoreCase("View Website URL"))
+						{
+							
+							String Temp = TempMessages.get(cardpos);
+							String[] Temp1 = Temp.split(",");
+							//This class will display a small dialog with twitter and email if they have an issue. 
+							AlertDialog.Builder dialogbuilder = new AlertDialog.Builder(context);
+							dialogbuilder.setTitle("URL")
+							.setMessage(Temp1[2])
+							.setCancelable(true);
+							AlertDialog dialog = dialogbuilder.create();
+							dialog.show();
+						
+						}else if(item.getTitle().toString().equalsIgnoreCase("View Topic"))
+						{
+							String Temp = TempMessages.get(cardpos);
+							String[] Temp1 = Temp.split(",");
+							//This class will display a small dialog with twitter and email if they have an issue. 
+							AlertDialog.Builder dialogbuilder = new AlertDialog.Builder(context);
+							dialogbuilder.setTitle("Topic")
+							.setMessage(Temp1[3])
+							.setCancelable(true);
+							AlertDialog dialog = dialogbuilder.create();
+							dialog.show();
+						
+							
+						}else if (item.getTitle().toString().equalsIgnoreCase("Unsubscribe to Topic"))
+						{
+							String Temp = TempMessages.get(cardpos);
+							String[] Temp1 = Temp.split(",");
+							ArrayList<String> topics = getStringArrayPref("Topics");
+							for(int i = 0; topics.size() > i;i++)
+							{
+								if(topics.get(i).equalsIgnoreCase(Temp1[3]))
+								{
+									unsub(i);
+								}
+							}
+							
+						}else
+						{
+							toast("FAILED");
+						}
+
+					}
+				});
 			}else
 			{
 				header.setTitle(Temp1[0]);
 			}
-			//Add a popup menu. This method set OverFlow button to visibile
-			header.setPopupMenu(R.menu.message, new OnClickCardHeaderPopupMenuListener(){
-				int cardpos = cardid;
-				@Override
-				public void onMenuItemClick(BaseCard card, MenuItem item) {
-					if(item.getTitle().toString().equalsIgnoreCase("View Website URL"))
-					{
-						
-						String Temp = TempMessages.get(cardpos);
-						String[] Temp1 = Temp.split(",");
-						//This class will display a small dialog with twitter and email if they have an issue. 
-						AlertDialog.Builder dialogbuilder = new AlertDialog.Builder(context);
-						dialogbuilder.setTitle("URL")
-						.setMessage(Temp1[2])
-						.setCancelable(true);
-						AlertDialog dialog = dialogbuilder.create();
-						dialog.show();
-					
-					}else if(item.getTitle().toString().equalsIgnoreCase("View Topic"))
-					{
-						;
-						//This class will display a small dialog with twitter and email if they have an issue. 
-						AlertDialog.Builder dialogbuilder = new AlertDialog.Builder(context);
-						dialogbuilder.setTitle("Topic")
-						.setMessage(Temp1[3])
-						.setCancelable(true);
-						AlertDialog dialog = dialogbuilder.create();
-						dialog.show();
-					
-						
-					}else if (item.getTitle().toString().equalsIgnoreCase("Unsubscribe to Topic"))
-					{
-						toast("Unsubscribing to this topics");
-					}else
-					{
-						toast("FAILED");
-					}
-
-				}
-			});
+			
 			card.setTitle(Temp1[1]);
 			card.setOnClickListener(new Card.OnCardClickListener() {
 				int cardpos = cardid;
@@ -185,17 +202,20 @@ public class Frontpage extends Activity{
 	            public void onClick(Card card, View view) {
 	            	String Temp = TempMessages.get(cardpos);
 					String[] Temp1 = Temp.split(",");
+					if(Temp1.length > 3)
+					{
 					String url = Temp1[2];
 	            	Intent i = new Intent(Intent.ACTION_VIEW);
 	            	i.setData(Uri.parse(url));
 	            	startActivity(i);
+					}
 	            }
 	        });
 			cards.add(card);
 		}
 		Collections.reverse(cards);
 		CardArrayAdapter mCardArrayAdapter = new CardArrayAdapter(this,cards);
-		CardListView listView = (CardListView)findViewById(R.id.CardList);
+		listView = (CardListView)findViewById(R.id.CardList);
 		if (listView!=null){
 			listView.setAdapter(mCardArrayAdapter);
 		}
@@ -267,6 +287,22 @@ public class Frontpage extends Activity{
 			return true;
 		case R.id.action_view:
 			//This will open a new tidy topic view to the user showing just the topics in a card style
+			showtopics();
+			return true;
+		case R.id.action_refresh:
+			//This will open a new tidy topic view to the user showing just the topics in a card style
+			TempMessages = getStringArrayPref("Messages");
+			if(TempMessages.size() < 1)
+			{
+				TempMessages.add("Welcome to Push Mobile"+","+"Sign up to topics using the Add Button on the top");
+			}
+			addtolistview(TempMessages);
+			return true;
+		case R.id.action_remove:
+			//Remove All messages 
+			TempMessages = getStringArrayPref("Messages");
+			TempMessages.clear();
+			setStringArrayPref("Messages", TempMessages);
 			return true;
 		default:
 
@@ -275,18 +311,73 @@ public class Frontpage extends Activity{
 		}
 
 	}
+	public void showtopics()
+	{
+		//This topic will show the topics in a listview in an alert dialog. 
+		//Picks up the topic
+		ArrayList<String> topics = getStringArrayPref("Topics");
+		if(topics.size() < 1 )
+		{
+			topics.add("Please Subscribe to a Topic");
+		}
+		AlertDialog.Builder TopicDialog = new AlertDialog.Builder(context);
+		LayoutInflater inflater = getLayoutInflater();
+		View convertView = (View) inflater.inflate(R.layout.list_dialog, null);
+		TopicDialog.setView(convertView);
+		TopicDialog.setTitle("Your Subscribed Topics:");
+		ListView topiclistview = (ListView) convertView.findViewById(R.id.Topic_listview);
+		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,topics);
+		topiclistview.setAdapter(adapter);
+		topiclistview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            
+            public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
+
+            	//User wants to unsub will ask if they really do if so then it will remove the topic. 
+            	AlertDialog.Builder unsubcomdialog = new AlertDialog.Builder(context);
+            	unsubcomdialog.setTitle("Unsubscribe?");
+            	unsubcomdialog.setMessage("Are you sure?");
+            	unsubcomdialog.setPositiveButton("Yes",new DialogInterface.OnClickListener() {
+					
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						//Wants to cancel
+						unsub(position);
+						
+					}
+				});
+            	unsubcomdialog.setNegativeButton("No",new DialogInterface.OnClickListener() {
+					
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						//Doesn't want to cancel
+						dialog.cancel();
+						
+					}
+				});
+				unsubcomdialog.show();
+            }
+            
+            	
+            });
 	
+		TopicDialog.show();
+				
+		
+	}
 	public void aboutus()
 	{
 		//This class will display a small dialog with twitter and email if they have an issue. 
-		AlertDialog.Builder dialogbuilder = new AlertDialog.Builder(this);
-		dialogbuilder.setTitle("About us")
-		.setMessage("You can find us on twitter @Robertwildman or Email us: wildappsuk@gmail.com")
-		.setCancelable(true);
-		AlertDialog dialog = dialogbuilder.create();
-		dialog.show();
+		AlertDialog.Builder TopicDialog = new AlertDialog.Builder(context);
+		LayoutInflater inflater = getLayoutInflater();
+		View convertView = (View) inflater.inflate(R.layout.list_dialog, null);
+		TopicDialog.setView(convertView);
+		TopicDialog.setTitle("About us");
+		ListView topiclistview = (ListView) convertView.findViewById(R.id.Topic_listview);
+		String[] entries = new String[]{"Twitter: @Robertwildman","Email: wildappsuk@gmail.com","Website: Pushconsole.com"};
+		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,entries);
+		topiclistview.setAdapter(adapter);
+		TopicDialog.show();
 	}
-
 	public void addtopicdialog()
 	{
 		AlertDialog.Builder alert = new AlertDialog.Builder(this);
@@ -303,7 +394,6 @@ public class Frontpage extends Activity{
 		public void onClick(DialogInterface dialog, int whichButton) {
 		  String value = input.getText().toString();
 		  addtopic(value,context);
-		  toast("Adding Topic");
 		  }
 		});
 
@@ -322,7 +412,6 @@ public class Frontpage extends Activity{
 		Toast.makeText(getBaseContext(), msg, Toast.LENGTH_LONG)
 		.show();
 	}
-
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu items for use in the action bar
@@ -433,11 +522,64 @@ public class Frontpage extends Activity{
 		// it will save the name to the end of the file called Topicnames
 		// This means that the user will be able to see the topics subscribe
 		// to and also get the notfications.
-
-
+    	ArrayList<String> topics = getStringArrayPref("Topics");
+		if(topics.contains(topicname) == true)
+		{
+			toast("You are already Subscribed!");
+		}else
+		{
 
 		// Will now add to the sns topic.This requires reading the endpoint
 		// from file.
 		subscribe_to_topic(topicname, 1, false, c);
+		}
 	}
+	public void unsub(int position)
+	{
+		Log.e("Push-Error", String.valueOf(position));
+		//This will now remove messages from the topic 
+		ArrayList<String> TempMessages1 = getStringArrayPref("Messages");
+    	ArrayList<String> topics = getStringArrayPref("Topics");
+    	ArrayList<String> topicArn = getStringArrayPref("Topicsarn");
+    	Collections.reverse(TempMessages1);
+		for(int i = 0;TempMessages1.size() > i ;i++)
+		{
+					
+			String[] tempstring = TempMessages1.get(i).split(",");
+			if(tempstring.length > 3)
+			{
+				if(tempstring[3].equalsIgnoreCase(topics.get(position)))
+				{
+					TempMessages1.remove(i);
+				}
+			}
+		}
+		
+    	sns.unsubscribe(topicArn.get(position));
+    	Toast.makeText(getApplicationContext(), "You have unsubcribed to " + topics.get(position), Toast.LENGTH_LONG).show();
+    	topics.remove(position);
+    	topicArn.remove(position);
+    	setStringArrayPref("Messages", TempMessages1);
+		setStringArrayPref("Topics", topics);
+		setStringArrayPref("Topicsarn", topicArn);
+		
+		//Will find the size of the error and if it is less then 1 then it will add a message telling the user how to add topics. 
+		if (TempMessages1.size() < 1)
+		{
+			TempMessages1.add("Welcome to Push Mobile"+","+"Sign up to topics using the Add Button on the top");
+		}
+		addtolistview(TempMessages1);
+		
+	}
+
+
+	public void startup()
+	{
+		//Used for setting things up on first upload
+		TempMessages = getStringArrayPref("Messages");
+		TempMessages.add("Welcome to Push Mobile"+","+"Sign up to topics using the Add Button on the top right");
+		TempMessages.add("Sample Message"+","+"Here you will see the topic message if you click on this card you will open up the website link with this message. If you want to know what the url is then click the small overflow button on this card"+","+"www.pushconsole.com"+","+"Topic Name");
+		setStringArrayPref("Messages", TempMessages);
+	}
+
 }
