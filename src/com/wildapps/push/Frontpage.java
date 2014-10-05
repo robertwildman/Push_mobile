@@ -22,8 +22,14 @@ import com.amazonaws.services.sns.AmazonSNS;
 import com.amazonaws.services.sns.AmazonSNSClient;
 import com.amazonaws.services.sns.model.CreatePlatformEndpointRequest;
 import com.amazonaws.services.sns.model.CreatePlatformEndpointResult;
+import com.amazonaws.services.sns.model.DeleteEndpointRequest;
 import com.amazonaws.services.sns.model.SubscribeRequest;
 import com.amazonaws.services.sns.model.SubscribeResult;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdSize;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
 import android.app.ActionBar;
@@ -50,6 +56,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
@@ -66,6 +73,7 @@ public class Frontpage extends Activity{
 	public Intent i;
 	public CardListView listView;
 	public Boolean stRetry;
+	public InterstitialAd advert;
 	public SubscribeResult subscribeResult;
 	public AmazonSNS sns;
 	public final Context context = this;
@@ -108,11 +116,21 @@ public class Frontpage extends Activity{
 		//Will find the size of the error and if it is less then 1 then it will add a message telling the user how to add topics. 
 		if (TempMessages.size() < 1)
 		{
-			TempMessages.add("Welcome to Push Mobile"+","+"Sign up to topics using the Add Button on the top");
+			TempMessages.add("Welcome to Push Mobile"+","+"Sign up to topics using the Add Button on the top. To make Topics visit www.pushconsole.com");
 		}
 		//Then starts the add to list view topic.
 		addtolistview(TempMessages);
-
+		
+		//Setting up the advert 
+				AdView advert = new AdView(this);
+				advert.setAdSize(AdSize.SMART_BANNER);
+				advert.setAdUnitId("ca-app-pub-2049126681125303/4752608873");
+				LinearLayout layout = (LinearLayout) findViewById(R.id.advert2);
+				layout.addView(advert);
+				
+				AdRequest ad = new AdRequest.Builder().build();
+				advert.loadAd(ad);
+				
 	}
 	
 	//This class deals with displaying the array to the listview. 
@@ -182,6 +200,17 @@ public class Frontpage extends Activity{
 								}
 							}
 							
+						}
+						else if (item.getTitle().toString().equalsIgnoreCase("Delete Message"))
+						{
+							TempMessages.remove(cardpos);
+							setStringArrayPref("Messages", TempMessages);
+							if(TempMessages.size() < 1)
+							{
+								TempMessages.add("Welcome to Push Mobile"+","+"Sign up to topics using the Add Button on the top");
+							}
+							addtolistview(TempMessages);
+							
 						}else
 						{
 							toast("FAILED");
@@ -204,10 +233,10 @@ public class Frontpage extends Activity{
 					String[] Temp1 = Temp.split(",");
 					if(Temp1.length > 3)
 					{
-					String url = Temp1[2];
-	            	Intent i = new Intent(Intent.ACTION_VIEW);
-	            	i.setData(Uri.parse(url));
-	            	startActivity(i);
+						String url = Temp1[2];
+						displayurl(url);
+					
+	            	
 					}
 	            }
 	        });
@@ -219,25 +248,7 @@ public class Frontpage extends Activity{
 		if (listView!=null){
 			listView.setAdapter(mCardArrayAdapter);
 		}
-		listView.setOnItemClickListener(new OnItemClickListener(){
-
-			@Override
-			public void onItemClick(AdapterView<?> parent, View view,
-					int position, long id) {
-				Collections.reverse(a);
-				String arraytemp = a.get(position);
-				String[] array = arraytemp.split(",");
-				Intent i = new Intent(Frontpage.this,DisplayMessage.class);
-				i.putExtra("Title",array[0]);
-				i.putExtra("Message",array[1]);
-				i.putExtra("URL",array[2]);
-				startActivity(i);
-
-
-			}
-
-
-		});
+		
 	}
 	public static void setStringArrayPref(String key, ArrayList<String> values) {
 
@@ -421,7 +432,7 @@ public class Frontpage extends Activity{
 	}
 	public void subscribe_to_topic(String Topicname, int Topicend,
 			Boolean retry, Context c) {
-		stTopicname = Topicname;
+		stTopicname = Topicname.toLowerCase();
 		stTopicend = Topicend;
 		stRetry = retry;
 
@@ -572,7 +583,34 @@ public class Frontpage extends Activity{
 		
 	}
 
-
+	public void displayurl(String url)
+	{
+		final String url1 = url;
+		//This topic will show advert then open the website 
+		advert = new InterstitialAd(this);
+		advert.setAdUnitId("ca-app-pub-2049126681125303/9962405275");
+		advert.setAdListener(new AdListener()
+		{
+			
+			@Override
+			public void onAdClosed()
+			{
+				Intent i = new Intent(Intent.ACTION_VIEW);
+		    	i.setData(Uri.parse(url1));
+		    	startActivity(i);
+			}
+			public void onAdLoaded()
+			{
+				advert.show();
+			}
+		}
+		);
+		AdRequest adrequest = new AdRequest.Builder().build();
+		advert.loadAd(adrequest);
+		toast("Loading Website");
+		
+		
+	}
 	public void startup()
 	{
 		//Used for setting things up on first upload

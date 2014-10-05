@@ -10,4 +10,14 @@
             android:layout_marginRight="12dp"
             android:layout_marginTop="12dp"/>
 
+    <LinearLayout
+        android:id="@+id/advert1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:orientation="vertical" >
+
+    </LinearLayout>
+
 </RelativeLayout>

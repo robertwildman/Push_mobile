@@ -3,6 +3,8 @@
     <item android:id="@+id/ViewWebsite" android:title="View Website URL"></item>
     <item android:id="@+id/ViewTopic" android:title="View Topic"></item>
     <item android:id="@+id/removetopic" android:title="Unsubscribe to Topic"></item>
+    <item android:id="@+id/removemessage" android:title="Delete Message"></item>
+    
     
 
 </menu>

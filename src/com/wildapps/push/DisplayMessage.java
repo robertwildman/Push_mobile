@@ -9,16 +9,26 @@ import java.util.ArrayList;
 import org.json.JSONArray;
 import org.json.JSONException;
 
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdSize;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.InterstitialAd;
+
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class DisplayMessage extends Activity{
 	public static SharedPreferences sharedPreferences;
@@ -26,6 +36,7 @@ public class DisplayMessage extends Activity{
 	public TextView TvTitle,TvMessage;
 	public Button BURL;
 	public Intent i;
+	public InterstitialAd advert;
 	public ArrayList<String> Messages;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -63,12 +74,27 @@ public class DisplayMessage extends Activity{
 		      card.addCardHeader(header);
 		      header.setTitle(Title);
 		      card.setTitle(Message);
+		      card.setOnClickListener(new Card.OnCardClickListener() {
+				
+				@Override
+				public void onClick(Card arg0, View arg1) {
+					displayurl(URL);
+					
+				}
+			});
 		      //Set card in the cardView
 		      CardView cardView = (CardView)findViewById(R.id.carddemo);
 		      cardView.setCard(card);
 		}
+		//Setting up the advert 
+		AdView advert = new AdView(this);
+		advert.setAdSize(AdSize.SMART_BANNER);
+		advert.setAdUnitId("ca-app-pub-2049126681125303/4752608873");
+		LinearLayout layout = (LinearLayout) findViewById(R.id.advert1);
+		layout.addView(advert);
 		
-	
+		AdRequest ad = new AdRequest.Builder().build();
+		advert.loadAd(ad);
 		
 	}
 	
@@ -102,5 +128,39 @@ public class DisplayMessage extends Activity{
 			}
 		}
 		return urls;
+	}
+	public void displayurl(String url)
+	{
+		final String url1 = url;
+		//This topic will show advert then open the website 
+		advert = new InterstitialAd(this);
+		advert.setAdUnitId("ca-app-pub-2049126681125303/9962405275");
+		advert.setAdListener(new AdListener()
+		{
+			
+			@Override
+			public void onAdClosed()
+			{
+				Intent i = new Intent(Intent.ACTION_VIEW);
+		    	i.setData(Uri.parse(url1));
+		    	startActivity(i);
+			}
+			public void onAdLoaded()
+			{
+				advert.show();
+			}
+		}
+		);
+		AdRequest adrequest = new AdRequest.Builder().build();
+		advert.loadAd(adrequest);
+		toast("Loading Website");
+		
+		
+		
+	}
+	public void toast(String msg) {
+		// A basic setup for a toast making it easy to display them in code
+		Toast.makeText(getBaseContext(), msg, Toast.LENGTH_LONG)
+		.show();
 	}
 }
