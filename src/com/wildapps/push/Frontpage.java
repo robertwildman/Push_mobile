@@ -18,6 +18,14 @@ import org.json.JSONArray;
 import org.json.JSONException;
 
 import com.amazonaws.auth.BasicAWSCredentials;
+import com.amazonaws.auth.BasicSessionCredentials;
+import com.amazonaws.auth.CognitoCachingCredentialsProvider;
+import com.amazonaws.auth.profile.ProfileCredentialsProvider;
+import com.amazonaws.regions.Regions;
+import com.amazonaws.services.securitytoken.AWSSecurityTokenServiceClient;
+import com.amazonaws.services.securitytoken.model.Credentials;
+import com.amazonaws.services.securitytoken.model.GetSessionTokenRequest;
+import com.amazonaws.services.securitytoken.model.GetSessionTokenResult;
 import com.amazonaws.services.sns.AmazonSNS;
 import com.amazonaws.services.sns.AmazonSNSClient;
 import com.amazonaws.services.sns.model.CreatePlatformEndpointRequest;
@@ -81,10 +89,18 @@ public class Frontpage extends Activity{
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		//Starting up session 
+		CognitoCachingCredentialsProvider cognitoProvider = new CognitoCachingCredentialsProvider(
+			    this, // get the context for the current activity
+			    "072893446206",
+			    "us-east-1:81f95e85-b16e-4940-a807-9ec69dca36ae",
+			    "arn:aws:iam::072893446206:role/Cognito_PushMobileUnauth_DefaultRole",
+			    "arn:aws:iam::072893446206:role/Cognito_PushMobileAuth_DefaultRole",
+			    Regions.US_EAST_1
+			);
+
 		//Setting up aws.
-		sns = new AmazonSNSClient(new BasicAWSCredentials(
-				"AKIAIB6HMHNDL5JNGATQ",
-				"UEsQLbVTVjJTWxif/4Garpi7usnMnxeFWvUiNS6u"));
+		sns = new AmazonSNSClient(cognitoProvider);
 		//This sets the view.
 		setContentView(R.layout.frontpage);
 		sharedPreferences = this.getSharedPreferences("com.wildapps.push",
@@ -314,6 +330,12 @@ public class Frontpage extends Activity{
 			TempMessages = getStringArrayPref("Messages");
 			TempMessages.clear();
 			setStringArrayPref("Messages", TempMessages);
+			TempMessages = getStringArrayPref("Messages");
+			if(TempMessages.size() < 1)
+			{
+				TempMessages.add("Welcome to Push Mobile"+","+"Sign up to topics using the Add Button on the top");
+			}
+			addtolistview(TempMessages);
 			return true;
 		default:
 
@@ -616,7 +638,8 @@ public class Frontpage extends Activity{
 		//Used for setting things up on first upload
 		TempMessages = getStringArrayPref("Messages");
 		TempMessages.add("Welcome to Push Mobile"+","+"Sign up to topics using the Add Button on the top right");
-		TempMessages.add("Sample Message"+","+"Here you will see the topic message if you click on this card you will open up the website link with this message. If you want to know what the url is then click the small overflow button on this card"+","+"www.pushconsole.com"+","+"Topic Name");
+		TempMessages.add("Sample Message"+","+"Here you will see the topic message if you click on this card you will open up the website link with this message. If you want to know what the url is then click the small overflow button on this card"+","+"https//www.pushconsole.com"+","+"Topic Name");
+		TempMessages.add("Create a Topic"+","+"To create a topic to send Push Notifications from then visit pushconsole.com or click on this card."+","+"https://www.pushconsole.com"+","+"Push");
 		setStringArrayPref("Messages", TempMessages);
 	}
 
