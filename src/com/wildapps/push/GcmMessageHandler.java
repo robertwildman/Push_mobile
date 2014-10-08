@@ -16,6 +16,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 
 public class GcmMessageHandler extends IntentService {
 
@@ -53,6 +54,7 @@ public class GcmMessageHandler extends IntentService {
 			Messages.remove(0);
 			Messages.trimToSize();
 		}
+		Log.e("Push", "Added");
 		Messages.add(context[0]+","+context[1]+","+context[2]+","+context[3]);
 		setStringArrayPref("Messages",Messages);
 		//This sets up the Notification if the Topic Name as the Title and then Message Title and the sub message

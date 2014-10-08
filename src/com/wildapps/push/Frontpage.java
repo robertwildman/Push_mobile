@@ -607,6 +607,10 @@ public class Frontpage extends Activity{
 
 	public void displayurl(String url)
 	{
+		if (!url.startsWith("http://") && !url.startsWith("https://"))
+		{
+		   url = "http://" + url;
+		}
 		final String url1 = url;
 		//This topic will show advert then open the website 
 		advert = new InterstitialAd(this);
@@ -618,6 +622,7 @@ public class Frontpage extends Activity{
 			public void onAdClosed()
 			{
 				Intent i = new Intent(Intent.ACTION_VIEW);
+				
 		    	i.setData(Uri.parse(url1));
 		    	startActivity(i);
 			}
