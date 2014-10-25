@@ -48,9 +48,7 @@ public class MainActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.mytopics);
-		sns = new AmazonSNSClient(new BasicAWSCredentials(
-				"AKIAIB6HMHNDL5JNGATQ",
-				"UEsQLbVTVjJTWxif/4Garpi7usnMnxeFWvUiNS6u"));
+		//SNS code
 		sharedPreferences = this.getSharedPreferences("com.wildapps.push",
 				Context.MODE_PRIVATE);
 		StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
@@ -68,13 +66,13 @@ public class MainActivity extends Activity {
 		// Setting up the layout
 		ListView list = (ListView) findViewById(R.id.lvtopics);
 		ArrayList<String> topics = getStringArrayPref("Topics");
-		
+
 		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
 				android.R.layout.simple_list_item_checked, topics);
 		list.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
-		
+
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            
+
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 //Meaning user will be unsubscribing
             	ArrayList<String> topics = getStringArrayPref("Topics");
@@ -99,10 +97,10 @@ public class MainActivity extends Activity {
 					list.setItemChecked(i, true);
 				}
 
-                
+
             }
 
-			
+
         });
         if (topics.size() < 1) {
 			topics = new ArrayList<String>(1);
@@ -113,15 +111,15 @@ public class MainActivity extends Activity {
 		}else
 		{
 		list.setAdapter(adapter);
-		
+
 		int i;
 		for(i = 0; i < list.getCount();i++)
 		{
 			list.setItemChecked(i, true);
 		}
-		
+
 		}
-		
+
 
 		// Setting up the EditText
 		etsearch = (EditText) findViewById(R.id.etsearch);
@@ -259,7 +257,7 @@ public class MainActivity extends Activity {
 					Toast.LENGTH_LONG).show();
 			ArrayList<String> topics = getStringArrayPref("Topics");
 			topics.add(Topicname);
-			
+
 			setStringArrayPref("Topics", topics);
 			setStringArrayPref("Topicsarn", topicArn);
 

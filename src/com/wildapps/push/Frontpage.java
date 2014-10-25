@@ -89,15 +89,8 @@ public class Frontpage extends Activity{
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		//Starting up session 
-		CognitoCachingCredentialsProvider cognitoProvider = new CognitoCachingCredentialsProvider(
-			    this, // get the context for the current activity
-			    "072893446206",
-			    "us-east-1:81f95e85-b16e-4940-a807-9ec69dca36ae",
-			    "arn:aws:iam::072893446206:role/Cognito_PushMobileUnauth_DefaultRole",
-			    "arn:aws:iam::072893446206:role/Cognito_PushMobileAuth_DefaultRole",
-			    Regions.US_EAST_1
-			);
+		//Starting up session
+		//Cognito code here to setup
 
 		//Setting up aws.
 		sns = new AmazonSNSClient(cognitoProvider);
@@ -118,9 +111,9 @@ public class Frontpage extends Activity{
 			getRegId();
 			startup();
 		}
-		//Frontpage of the app This will show the recent pushes to the Phone 
+		//Frontpage of the app This will show the recent pushes to the Phone
 		//If there as been none it will show a Welcome Message and also one telling them how they can sign up.
-		//Will save it so it can show up on the frontpage. 
+		//Will save it so it can show up on the frontpage.
 		try
 		{
 			TempMessages = getStringArrayPref("Messages");
@@ -129,44 +122,44 @@ public class Frontpage extends Activity{
 			TempMessages = new ArrayList<String>(1);
 			Log.e("Push", ex.toString());
 		}
-		//Will find the size of the error and if it is less then 1 then it will add a message telling the user how to add topics. 
+		//Will find the size of the error and if it is less then 1 then it will add a message telling the user how to add topics.
 		if (TempMessages.size() < 1)
 		{
 			TempMessages.add("Welcome to Push Mobile"+","+"Sign up to topics using the Add Button on the top. To make Topics visit www.pushconsole.com");
 		}
 		//Then starts the add to list view topic.
 		addtolistview(TempMessages);
-		
-		//Setting up the advert 
+
+		//Setting up the advert
 				AdView advert = new AdView(this);
 				advert.setAdSize(AdSize.SMART_BANNER);
 				advert.setAdUnitId("ca-app-pub-2049126681125303/4752608873");
 				LinearLayout layout = (LinearLayout) findViewById(R.id.advert2);
 				layout.addView(advert);
-				
+
 				AdRequest ad = new AdRequest.Builder().build();
 				advert.loadAd(ad);
-				
+
 	}
-	
-	//This class deals with displaying the array to the listview. 
+
+	//This class deals with displaying the array to the listview.
 	public void addtolistview(final ArrayList<String> a)
 	{
-		
+
 		List<Map<String,String>> data = new ArrayList<Map<String,String>>();
 		ArrayList<Card> cards = new ArrayList<Card>();
-		//This will spilt the array and add in to the listview 
+		//This will spilt the array and add in to the listview
 		for(int i = 0; i < a.size();i++)
 		{
 			cardid = i;
 			String Temp = a.get(i);
 			Temp1 = Temp.split(",");
-			//Dealing with the card library 
+			//Dealing with the card library
 			//Create a Card
 			Card card = new Card(this);
 			//Create a CardHeader
 			CardHeader header = new CardHeader(this);
-			
+
 			//Add Header to card
 			card.addCardHeader(header);
 			if(Temp1.length > 3)
@@ -179,30 +172,30 @@ public class Frontpage extends Activity{
 					public void onMenuItemClick(BaseCard card, MenuItem item) {
 						if(item.getTitle().toString().equalsIgnoreCase("View Website URL"))
 						{
-							
+
 							String Temp = TempMessages.get(cardpos);
 							String[] Temp1 = Temp.split(",");
-							//This class will display a small dialog with twitter and email if they have an issue. 
+							//This class will display a small dialog with twitter and email if they have an issue.
 							AlertDialog.Builder dialogbuilder = new AlertDialog.Builder(context);
 							dialogbuilder.setTitle("URL")
 							.setMessage(Temp1[2])
 							.setCancelable(true);
 							AlertDialog dialog = dialogbuilder.create();
 							dialog.show();
-						
+
 						}else if(item.getTitle().toString().equalsIgnoreCase("View Topic"))
 						{
 							String Temp = TempMessages.get(cardpos);
 							String[] Temp1 = Temp.split(",");
-							//This class will display a small dialog with twitter and email if they have an issue. 
+							//This class will display a small dialog with twitter and email if they have an issue.
 							AlertDialog.Builder dialogbuilder = new AlertDialog.Builder(context);
 							dialogbuilder.setTitle("Topic")
 							.setMessage(Temp1[3])
 							.setCancelable(true);
 							AlertDialog dialog = dialogbuilder.create();
 							dialog.show();
-						
-							
+
+
 						}else if (item.getTitle().toString().equalsIgnoreCase("Unsubscribe to Topic"))
 						{
 							String Temp = TempMessages.get(cardpos);
@@ -215,7 +208,7 @@ public class Frontpage extends Activity{
 									unsub(i);
 								}
 							}
-							
+
 						}
 						else if (item.getTitle().toString().equalsIgnoreCase("Delete Message"))
 						{
@@ -226,7 +219,7 @@ public class Frontpage extends Activity{
 								TempMessages.add("Welcome to Push Mobile"+","+"Sign up to topics using the Add Button on the top");
 							}
 							addtolistview(TempMessages);
-							
+
 						}else
 						{
 							toast("FAILED");
@@ -238,11 +231,11 @@ public class Frontpage extends Activity{
 			{
 				header.setTitle(Temp1[0]);
 			}
-			
+
 			card.setTitle(Temp1[1]);
 			card.setOnClickListener(new Card.OnCardClickListener() {
 				int cardpos = cardid;
-				
+
 	            @Override
 	            public void onClick(Card card, View view) {
 	            	String Temp = TempMessages.get(cardpos);
@@ -251,8 +244,8 @@ public class Frontpage extends Activity{
 					{
 						String url = Temp1[2];
 						displayurl(url);
-					
-	            	
+
+
 					}
 	            }
 	        });
@@ -264,7 +257,7 @@ public class Frontpage extends Activity{
 		if (listView!=null){
 			listView.setAdapter(mCardArrayAdapter);
 		}
-		
+
 	}
 	public static void setStringArrayPref(String key, ArrayList<String> values) {
 
@@ -326,7 +319,7 @@ public class Frontpage extends Activity{
 			addtolistview(TempMessages);
 			return true;
 		case R.id.action_remove:
-			//Remove All messages 
+			//Remove All messages
 			TempMessages = getStringArrayPref("Messages");
 			TempMessages.clear();
 			setStringArrayPref("Messages", TempMessages);
@@ -346,7 +339,7 @@ public class Frontpage extends Activity{
 	}
 	public void showtopics()
 	{
-		//This topic will show the topics in a listview in an alert dialog. 
+		//This topic will show the topics in a listview in an alert dialog.
 		//Picks up the topic
 		ArrayList<String> topics = getStringArrayPref("Topics");
 		if(topics.size() < 1 )
@@ -362,44 +355,44 @@ public class Frontpage extends Activity{
 		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,topics);
 		topiclistview.setAdapter(adapter);
 		topiclistview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            
+
             public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
 
-            	//User wants to unsub will ask if they really do if so then it will remove the topic. 
+            	//User wants to unsub will ask if they really do if so then it will remove the topic.
             	AlertDialog.Builder unsubcomdialog = new AlertDialog.Builder(context);
             	unsubcomdialog.setTitle("Unsubscribe?");
             	unsubcomdialog.setMessage("Are you sure?");
             	unsubcomdialog.setPositiveButton("Yes",new DialogInterface.OnClickListener() {
-					
+
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
 						//Wants to cancel
 						unsub(position);
-						
+
 					}
 				});
             	unsubcomdialog.setNegativeButton("No",new DialogInterface.OnClickListener() {
-					
+
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
 						//Doesn't want to cancel
 						dialog.cancel();
-						
+
 					}
 				});
 				unsubcomdialog.show();
             }
-            
-            	
+
+
             });
-	
+
 		TopicDialog.show();
-				
-		
+
+
 	}
 	public void aboutus()
 	{
-		//This class will display a small dialog with twitter and email if they have an issue. 
+		//This class will display a small dialog with twitter and email if they have an issue.
 		AlertDialog.Builder TopicDialog = new AlertDialog.Builder(context);
 		LayoutInflater inflater = getLayoutInflater();
 		View convertView = (View) inflater.inflate(R.layout.list_dialog, null);
@@ -418,7 +411,7 @@ public class Frontpage extends Activity{
 		alert.setTitle("Add new Topic");
 		alert.setMessage("Enter Name of Topic you wish to Subscribe to:");
 
-		// Set an EditText view to get user input 
+		// Set an EditText view to get user input
 		final EditText input = new EditText(this);
 		input.setHint("Topic Name");
 		alert.setView(input);
@@ -437,8 +430,8 @@ public class Frontpage extends Activity{
 		});
 
 		alert.show();
-		
-		
+
+
 	}
 	public void toast(String msg) {
 		// A basic setup for a toast making it easy to display them in code
@@ -475,7 +468,7 @@ public class Frontpage extends Activity{
 					Toast.LENGTH_LONG).show();
 			ArrayList<String> topics = getStringArrayPref("Topics");
 			topics.add(Topicname);
-			
+
 			setStringArrayPref("Topics", topics);
 			setStringArrayPref("Topicsarn", topicArn);
 
@@ -570,14 +563,14 @@ public class Frontpage extends Activity{
 	public void unsub(int position)
 	{
 		Log.e("Push-Error", String.valueOf(position));
-		//This will now remove messages from the topic 
+		//This will now remove messages from the topic
 		ArrayList<String> TempMessages1 = getStringArrayPref("Messages");
     	ArrayList<String> topics = getStringArrayPref("Topics");
     	ArrayList<String> topicArn = getStringArrayPref("Topicsarn");
     	Collections.reverse(TempMessages1);
 		for(int i = 0;TempMessages1.size() > i ;i++)
 		{
-					
+
 			String[] tempstring = TempMessages1.get(i).split(",");
 			if(tempstring.length > 3)
 			{
@@ -587,7 +580,7 @@ public class Frontpage extends Activity{
 				}
 			}
 		}
-		
+
     	sns.unsubscribe(topicArn.get(position));
     	Toast.makeText(getApplicationContext(), "You have unsubcribed to " + topics.get(position), Toast.LENGTH_LONG).show();
     	topics.remove(position);
@@ -595,14 +588,14 @@ public class Frontpage extends Activity{
     	setStringArrayPref("Messages", TempMessages1);
 		setStringArrayPref("Topics", topics);
 		setStringArrayPref("Topicsarn", topicArn);
-		
-		//Will find the size of the error and if it is less then 1 then it will add a message telling the user how to add topics. 
+
+		//Will find the size of the error and if it is less then 1 then it will add a message telling the user how to add topics.
 		if (TempMessages1.size() < 1)
 		{
 			TempMessages1.add("Welcome to Push Mobile"+","+"Sign up to topics using the Add Button on the top");
 		}
 		addtolistview(TempMessages1);
-		
+
 	}
 
 	public void displayurl(String url)
@@ -612,17 +605,17 @@ public class Frontpage extends Activity{
 		   url = "http://" + url;
 		}
 		final String url1 = url;
-		//This topic will show advert then open the website 
+		//This topic will show advert then open the website
 		advert = new InterstitialAd(this);
 		advert.setAdUnitId("ca-app-pub-2049126681125303/9962405275");
 		advert.setAdListener(new AdListener()
 		{
-			
+
 			@Override
 			public void onAdClosed()
 			{
 				Intent i = new Intent(Intent.ACTION_VIEW);
-				
+
 		    	i.setData(Uri.parse(url1));
 		    	startActivity(i);
 			}
@@ -635,8 +628,8 @@ public class Frontpage extends Activity{
 		AdRequest adrequest = new AdRequest.Builder().build();
 		advert.loadAd(adrequest);
 		toast("Loading Website");
-		
-		
+
+
 	}
 	public void startup()
 	{
